@@ -65,8 +65,11 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
     }
 
     public void updateList(List<Note> notes) {
-        this.notes = notes;
-        notifyDataSetChanged();
+        // Allow recyclerview animations to complete normally if we already know about data changes
+        if (notes.size() != this.notes.size() || !this.notes.containsAll(notes)) {
+            this.notes = notes;
+            notifyDataSetChanged();
+        }
     }
 
     public void removeItem(int position) {
