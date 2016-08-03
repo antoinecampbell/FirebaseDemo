@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -20,7 +18,6 @@ public class NoteActivity extends AppCompatActivity {
     private DatabaseReference database;
     private TextView titleTextView;
     private TextView descriptionTextView;
-    private View rootView;
     private Note note;
 
     public static Intent newInstance(Context context, Note note) {
@@ -48,8 +45,6 @@ public class NoteActivity extends AppCompatActivity {
             descriptionTextView.setText(note.getDescription());
         }
 
-        rootView = findViewById(R.id.root);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,16 +55,8 @@ public class NoteActivity extends AppCompatActivity {
                 }
                 note.setTitle(titleTextView.getText().toString());
                 note.setDescription(descriptionTextView.getText().toString());
-                database.child("notes").child(note.getUid()).setValue(note, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (databaseError == null) {
-                            finish();
-                        } else {
-                            Snackbar.make(rootView, "Unable to save note at this time", Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                database.child("notes").child(note.getUid()).setValue(note);
+                finish();
             }
         });
 

@@ -3,7 +3,6 @@ package com.antoinecampbell.firebase.demo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@SuppressWarnings("unused")
 public class Note implements Parcelable {
 
     private String uid;
