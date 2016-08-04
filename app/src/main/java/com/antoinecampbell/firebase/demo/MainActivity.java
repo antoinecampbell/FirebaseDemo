@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DeletionListener {
 
     DatabaseReference database;
     NoteRecyclerViewAdapter adapter;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         database = FirebaseDatabase.getInstance().getReference();
-        adapter = new NoteRecyclerViewAdapter(Collections.<Note>emptyList(), database);
+        adapter = new NoteRecyclerViewAdapter(Collections.<Note>emptyList());
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new NoteItemTouchHelperCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, adapter));
+                new NoteItemTouchHelperCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, MainActivity.this));
         itemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
     }
@@ -80,5 +80,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void itemRemoved(int position) {
+        Note note = adapter.getItem(position);
+        adapter.removeItem(position);
+        database.child("notes").child(note.getUid()).removeValue();
     }
 }

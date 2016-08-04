@@ -7,14 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-
 import java.util.List;
 
 public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.ViewHolder> {
 
     private List<Note> notes;
-    private DatabaseReference database;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -42,9 +39,8 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         }
     }
 
-    public NoteRecyclerViewAdapter(List<Note> notes, DatabaseReference database) {
+    public NoteRecyclerViewAdapter(List<Note> notes) {
         this.notes = notes;
-        this.database = database;
     }
 
     @Override
@@ -73,9 +69,11 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
     }
 
     public void removeItem(int position) {
-        Note note = notes.get(position);
         notes.remove(position);
         notifyItemRemoved(position);
-        database.child("notes").child(note.getUid()).removeValue();
+    }
+
+    public Note getItem(int position) {
+        return notes.get(position);
     }
 }

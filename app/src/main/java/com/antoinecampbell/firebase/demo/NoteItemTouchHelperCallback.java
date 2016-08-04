@@ -7,15 +7,16 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 
 public class NoteItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
     private static final float ALPHA_FULL = 1.0f;
-    private NoteRecyclerViewAdapter adapter;
+    private DeletionListener listener;
 
+    @SuppressWarnings("unused")
     private NoteItemTouchHelperCallback(int dragDirs, int swipeDirs) {
         super(dragDirs, swipeDirs);
     }
 
-    public NoteItemTouchHelperCallback(int dragDirs, int swipeDirs, NoteRecyclerViewAdapter adapter) {
+    public NoteItemTouchHelperCallback(int dragDirs, int swipeDirs, DeletionListener listener) {
         super(dragDirs, swipeDirs);
-        this.adapter = adapter;
+        this.listener = listener;
     }
 
     @Override
@@ -25,7 +26,9 @@ public class NoteItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback 
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        adapter.removeItem(viewHolder.getAdapterPosition());
+        if (listener != null) {
+            listener.itemRemoved(viewHolder.getAdapterPosition());
+        }
     }
 
     @Override
